@@ -1,0 +1,1 @@
+split -l 200000 sessions.csv ../processed/session_chunk_ --additional-suffix=.csv
