@@ -1,0 +1,24 @@
+{
+  "accuracy": 0.5768245838668374,
+  "precision_pos": 0.0,
+  "recall_pos": 0.0,
+  "f1_pos": 0.0,
+  "precision_neg": 0.5768245838668374,
+  "recall_neg": 1.0,
+  "f1_neg": 0.731628095818108,
+  "confusion_matrix": [
+    [
+      901,
+      0
+    ],
+    [
+      661,
+      0
+    ]
+  ],
+  "n_test": 1562,
+  "class_balance_test": {
+    "n_not_long_stay": 901,
+    "n_long_stay": 661
+  }
+}

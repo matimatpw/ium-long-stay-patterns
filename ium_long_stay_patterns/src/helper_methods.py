@@ -13,7 +13,7 @@ def prepare_booking_data(sessions_csv="data/raw/sessions.csv"):
     bookings["booking_duration"] = pd.to_datetime(bookings["booking_duration"], errors="coerce")
     bookings["length_of_stay"] = (bookings["booking_duration"] - bookings["booking_date"]).dt.days
     bookings["is_long_stay"] = (bookings["length_of_stay"] >= 7).astype(int)
-    print(bookings.head())
+    # print(bookings.head())
 
     return bookings
 
@@ -38,7 +38,7 @@ def prepare_listing_data(listings_csv="data/raw/listings.csv", sessions_csv="dat
         data[["total_bookings", "min_stay", "max_stay", "avg_stay", "stays_gte_7"]].fillna(0)
     # Define target: listing is long-stay if average stay >= 7
     data["is_long_stay"] = (data["avg_stay"] >= 7).astype(int)
-    print(data.head())
+    # print(data.head())
     return data
 
 def plot_long_stay_distribution(df, kind="booking", save_path=None, ax=None):
