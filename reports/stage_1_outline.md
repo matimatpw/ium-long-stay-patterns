@@ -32,11 +32,13 @@ Za sukces analityczny uznamy osiągnięcie **AP > 0.6** *(przy Baseline równym 
 ## **4. Biznesowe kryterium sukcesu**
 Dostarczenie listy parametrów które najbardziej wpływają na dokonywanie długich rezerwacji oraz wzrost skuteczności sprzedaży długich noclegów o 10%
 
+
+
 ## **5. Zmienna celu**
-Zmienną celu jest binarna flaga is_long_stay, przyjmująca wartość 1, gdy wyliczona długość noclegu (różnica między booking_duration a booking_date) wynosi co najmniej 7 dni, oraz 0 w przeciwnym razie.
+Zmienną celu jest binarna flaga **is_long_stay**, przyjmująca wartość 1, gdy wyliczona długość noclegu (różnica między booking_duration a booking_date) wynosi co najmniej 7 dni, oraz 0 w przeciwnym razie.
 
 ## **6. Baseline**
-Naiwny klasyfikator który przewiduje zawsze klase is_long_stay=0.
+Naiwny klasyfikator który przewiduje zawsze klase **is_long_stay=0**.
 Dostajemy Średnią precyzje(AP) równa 42%.
 
 ### Overview
@@ -76,7 +78,7 @@ Dostajemy Średnią precyzje(AP) równa 42%.
 4. Recenzje użytkowników dotyczące konkretnych ofert.
 
 ## **8. Wstępne dane wejściowe**
-Do danych wejściowych wybierzemy najbardziej skorelowane atrybuty z pliku *listings.csv* z statystykami które wpływają na liczbę rezerwacji. (np. liczba recenzji)
+Do danych wejściowych wybierzemy najbardziej skorelowane atrybuty liczbowe z pliku *listings.csv* z statystykami które wpływają na liczbę rezerwacji. (np. liczba recenzji). Natomiast jako tagów użyjemy policzonych wartości długości noclegu.
 
 W poźniejszym etapie projektu planujemy również spróbować sparametryzować sentyment recenzji użytkowników, aby zobaczyć jak duży wpływ tekst recenzji ma na naszą funkcje celu.
 
@@ -116,7 +118,7 @@ Macierz korelacji istotnych atrybutów z danych **listings.csv** dla modelowania
 ![alt text](../reports/figures/booking_long_stay_dist.png)
 
 ### Dystrybucja długich i krótkich rezerwacji obiektów
-*Obiektowi przypisywana jest długa rezerwacja jeśli średnia długość pobytu w tym obiekcie jest większa lub równa 7
+*Obiektowi przypisywana jest długa rezerwacja jeśli średnia długość pobytu w tym obiekcie jest większa lub równa 7*
 
 ![alt text](../reports/figures/listing_long_stay_dist.png)
 
