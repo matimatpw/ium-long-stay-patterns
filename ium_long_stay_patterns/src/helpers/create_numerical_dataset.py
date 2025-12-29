@@ -82,21 +82,51 @@ def create_numerical_dataset(listings_csv, columns=DEFAULT_NUMERICAL_COLUMNS, dr
 
 def strategy_for_nans(df):
     df_numeric = df.copy()
-    # 1. Cena - usuwamy wiersze, gdzie brakuje ceny (Target)
     df_numeric = df_numeric.dropna(subset=['price'])
 
-    # 2. Recenzje - brak recenzji to po prostu 0 recenzji na miesiąc
     df_numeric['reviews_per_month'] = df_numeric['reviews_per_month'].fillna(0)
 
-    # 3. Fizyczne cechy - wypełniamy medianą
     for col in ['beds', 'bedrooms', 'bathrooms']:
         if col in df_numeric.columns:
             df_numeric[col] = df_numeric[col].fillna(df_numeric[col].median())
 
-    # 4. Wskaźniki hosta - wypełniamy medianą lub średnią
     for col in ['host_response_rate', 'host_acceptance_rate']:
         if col in df_numeric.columns:
             df_numeric[col] = df_numeric[col].fillna(df_numeric[col].median())
 
     return df_numeric
 
+
+
+def merge_with_stats(df_numeric, stats_csv_path=ProcessedCSV.LISTINGS_STATS.path):
+    """
+    Łączy wyczyszczone dane numeryczne ze statystykami rezerwacji.
+
+    - Pobiera 'total_bookings' jako cechę.
+    - Tworzy kolumnę 'target': 1 jeśli long_stay > short_stay, w przeciwnym razie 0.
+    - Łączy po kluczach: df_numeric.id == stats.listing_id.
+    """
+    # 1. Wczytanie statystyk
+    df_stats = pd.read_csv(stats_csv_path)
+
+    # 2. Obliczenie targetu (long_stay > short_stay)
+    # Zwraca True/False, co .astype(int) zamienia na 1/0
+    df_stats['target'] = (df_stats['long_stay'] > df_stats['short_stay']).astype(int)
+
+    # 3. Wybranie tylko potrzebnych kolumn do merga
+    # Potrzebujemy listing_id (klucz), total_bookings (cecha) oraz target (etykieta)
+    df_stats_subset = df_stats[['listing_id', 'total_bookings', 'target']]
+
+    # 4. Merge danych (Inner join, aby mieć tylko listingi z kompletnymi statystykami)
+    df_final = pd.merge(
+        df_numeric,
+        df_stats_subset,
+        left_on='id',
+        right_on='listing_id',
+        how='inner'
+    )
+
+    # 5. Usunięcie nadmiarowego klucza 'listing_id' po połączeniu
+    df_final = df_final.drop(columns=['listing_id', 'id', 'host_id'])
+
+    return df_final
