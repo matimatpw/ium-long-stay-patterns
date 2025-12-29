@@ -24,6 +24,7 @@ class ProcessedCSV(Enum):
     REVIEWS = PROCESSED_DATA_DIR / "reviews.csv"
     LISTINGS = PROCESSED_DATA_DIR / "listings.csv"
     USERS = PROCESSED_DATA_DIR / "users.csv"
+    LISTINGS_STATS = PROCESSED_DATA_DIR / "listings_stats.csv"
 
     @property
     def path(self) -> Path:
