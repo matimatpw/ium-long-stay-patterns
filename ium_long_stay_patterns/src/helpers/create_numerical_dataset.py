@@ -13,7 +13,7 @@ DEFAULT_NUMERICAL_COLUMNS = [
     'reviews_per_month'
 ]
 
-def create_numerical_dataset(listings_csv, columns=DEFAULT_NUMERICAL_COLUMNS, dropna_columns_that_are_all_nan=True):
+def create_numerical_dataset(listings_csv, columns=DEFAULT_NUMERICAL_COLUMNS, dropna_columns_that_are_all_nan=True, strategy=False):
     """
     Read listings CSV and return a DataFrame containing only numeric columns.
 
@@ -73,19 +73,30 @@ def create_numerical_dataset(listings_csv, columns=DEFAULT_NUMERICAL_COLUMNS, dr
     if dropna_columns_that_are_all_nan:
         df = df.dropna(axis=1, how='all')
 
+    if strategy:
+        return strategy_for_nans(df.copy())
+
     return df
 
 
-# with pd.option_context('display.max_columns', None):
 
-#     df_numeric = create_numerical_dataset(ProcessedCSV.LISTINGS.path)
-#     # print(df_numeric.head())
+def strategy_for_nans(df):
+    df_numeric = df.copy()
+    # 1. Cena - usuwamy wiersze, gdzie brakuje ceny (Target)
+    df_numeric = df_numeric.dropna(subset=['price'])
 
+    # 2. Recenzje - brak recenzji to po prostu 0 recenzji na miesiąc
+    df_numeric['reviews_per_month'] = df_numeric['reviews_per_month'].fillna(0)
 
-#     nan_counts = df_numeric.isna().sum()
+    # 3. Fizyczne cechy - wypełniamy medianą
+    for col in ['beds', 'bedrooms', 'bathrooms']:
+        if col in df_numeric.columns:
+            df_numeric[col] = df_numeric[col].fillna(df_numeric[col].median())
 
-#     print("--- NaN Counts per Column ---")
-#     print(nan_counts)
+    # 4. Wskaźniki hosta - wypełniamy medianą lub średnią
+    for col in ['host_response_rate', 'host_acceptance_rate']:
+        if col in df_numeric.columns:
+            df_numeric[col] = df_numeric[col].fillna(df_numeric[col].median())
 
-#     with open("dataframe_head.txt", "w", encoding="utf-8") as f:
-#         f.write(df_numeric.head().to_string())
+    return df_numeric
+
