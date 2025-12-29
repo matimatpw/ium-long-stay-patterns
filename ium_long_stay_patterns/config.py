@@ -35,6 +35,7 @@ class ProcessedCSV(Enum):
         return str(self.path)
 
 MODELS_DIR = PROJ_ROOT / "models"
+SAVED_MODELS_DIR = PROJ_ROOT / "saved_models"
 
 REPORTS_DIR = PROJ_ROOT / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
