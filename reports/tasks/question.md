@@ -5,7 +5,9 @@
 
 # TODO
 
-1. listing_statistics
+<!-- 1. listing_statistics -->
 2. amenities standaryzowac
-3. polaczyc w 1 data set interesujace kolumny
+<!-- 3. polaczyc w 1 data set interesujace kolumny -->
 4. host_response_time (zestandaryzowac jakos jesli sie da chyba tak)
+5. zrobic duzy dataset do modelu xgboost/BIgBinaryClassifier i wytrenowac
+6. microservice: base - naive / big_model - xgboost/BigBinaryClassifier
