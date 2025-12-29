@@ -33,6 +33,8 @@ print(data.head())
 
 
 booking_vars = ["total_bookings", "min_stay", "max_stay", "avg_stay", "stays_gte_7"]
+
+# only numeric columns from listings
 listing_numeric = listings.select_dtypes(include="number").columns.tolist()
 
 corr_matrix = data[listing_numeric + booking_vars].corr()

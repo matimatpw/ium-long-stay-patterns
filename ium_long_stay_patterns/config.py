@@ -1,4 +1,5 @@
 from pathlib import Path
+from enum import Enum
 
 from dotenv import load_dotenv
 from loguru import logger
@@ -15,6 +16,22 @@ RAW_DATA_DIR = DATA_DIR / "raw"
 INTERIM_DATA_DIR = DATA_DIR / "interim"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 EXTERNAL_DATA_DIR = DATA_DIR / "external"
+
+class ProcessedCSV(Enum):
+    """Paths to processed CSV files inside `data/processed`."""
+
+    SESSIONS = PROCESSED_DATA_DIR / "sessions.csv"
+    REVIEWS = PROCESSED_DATA_DIR / "reviews.csv"
+    LISTINGS = PROCESSED_DATA_DIR / "listings.csv"
+    USERS = PROCESSED_DATA_DIR / "users.csv"
+
+    @property
+    def path(self) -> Path:
+        """Return the `Path` for this processed CSV file."""
+        return self.value
+
+    def __str__(self) -> str:  # pragma: no cover - trivial
+        return str(self.path)
 
 MODELS_DIR = PROJ_ROOT / "models"
 
