@@ -66,7 +66,13 @@ create_environment:
 ## Make dataset
 .PHONY: data
 data: requirements
-	$(PYTHON_INTERPRETER) ium_long_stay_patterns/dataset.py
+	poetry run $(PYTHON_INTERPRETER) ium_long_stay_patterns/dataset.py
+
+
+## Create listing stats CSV
+.PHONY: listing_stats
+listing_stats: data
+	poetry run $(PYTHON_INTERPRETER) -c "from ium_long_stay_patterns.src.helpers.create_listing_stats_dataset import save_listing_stats; save_listing_stats()"
 
 
 #################################################################################
