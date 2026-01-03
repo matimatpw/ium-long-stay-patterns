@@ -99,6 +99,7 @@ def _load_naive_model(path: Path):
         state = torch.load(path, map_location=_device)
         model.load_state_dict(state)
     except Exception:
+        print("EXCEPTION")
         # naive model may have empty state dict; ignore
         pass
     model.to(_device)
@@ -121,7 +122,11 @@ except Exception as e:
     _binary_model = None
 
 try:
-    _naive_model = _load_naive_model(SAVED_MODELS_DIR / "naive_classifier_model.pth")
+    path = SAVED_MODELS_DIR / "naive_classifier_model.pth" 
+    print(f"Loading naive model from: {path} (exists={path.exists()})")
+    _naive_model = _load_naive_model(path)
+    print("Naive model loaded")
+
 except Exception:
     _naive_model = None
 

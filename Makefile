@@ -76,6 +76,7 @@ listing_stats: data
 	poetry run $(PYTHON_INTERPRETER) -m ium_long_stay_patterns.dataset --listing-stats
 
 
+## service
 .PHONY: run
 run:
 	docker build -f prediction_service/Dockerfile -t $(IMAGE_NAME):latest .
