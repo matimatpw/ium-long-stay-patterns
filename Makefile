@@ -72,7 +72,7 @@ data: requirements
 ## Create listing stats CSV
 .PHONY: listing_stats
 listing_stats: data
-	poetry run $(PYTHON_INTERPRETER) -c "from ium_long_stay_patterns.src.helpers.create_listing_stats_dataset import save_listing_stats; save_listing_stats()"
+	poetry run $(PYTHON_INTERPRETER) -m ium_long_stay_patterns.dataset --listing-stats
 
 
 #################################################################################

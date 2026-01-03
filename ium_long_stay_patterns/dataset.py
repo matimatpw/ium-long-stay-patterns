@@ -5,22 +5,32 @@ from tqdm import tqdm
 import typer
 
 from ium_long_stay_patterns.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
+from ium_long_stay_patterns.src.helpers.create_listing_stats_dataset import save_listing_stats
+
+from ium_long_stay_patterns.config import ProcessedCSV
 
 app = typer.Typer()
+
+def create_listing_stats_dataset(
+    sessions_csv: str = ProcessedCSV.SESSIONS.path,
+    listings_csv: str = ProcessedCSV.LISTINGS.path,
+    output_csv: str = ProcessedCSV.LISTINGS_STATS.path,
+) -> None:
+    """Create and save the listing stats dataset."""
+    logger.info("Creating listing stats dataset...")
+    save_listing_stats()
+    logger.info(f"Listing stats dataset saved to {output_csv}")
 
 
 @app.command()
 def main(
     # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
-    input_path: Path = RAW_DATA_DIR / "dataset.csv",
-    output_path: Path = PROCESSED_DATA_DIR / "dataset.csv",
+    listing_stats: bool = True,
     # ----------------------------------------------
 ):
     # ---- REPLACE THIS WITH YOUR OWN CODE ----
     logger.info("Processing dataset...")
-    for i in tqdm(range(10), total=10):
-        if i == 5:
-            logger.info("Something happened for iteration 5.")
+    create_listing_stats_dataset()
     logger.success("Processing dataset complete.")
     # -----------------------------------------
 
