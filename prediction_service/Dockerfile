@@ -21,6 +21,8 @@ COPY README.md /app/
 
 COPY models /app/models
 
+COPY saved_models /app/saved_models
+
 # Configure poetry to install into the system environment and install dependencies
 RUN poetry config virtualenvs.create false \
 	&& poetry install --no-interaction --no-ansi --without dev --no-root

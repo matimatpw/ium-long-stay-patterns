@@ -37,6 +37,8 @@ class ProcessedCSV(Enum):
 MODELS_DIR = PROJ_ROOT / "models"
 SAVED_MODELS_DIR = PROJ_ROOT / "saved_models"
 
+TEST_DATA_DIR = PROJ_ROOT / "prediction_service" / "test_data"
+
 REPORTS_DIR = PROJ_ROOT / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
 

@@ -98,7 +98,7 @@ def strategy_for_nans(df):
 
 
 
-def merge_with_stats(df_numeric, stats_csv_path=ProcessedCSV.LISTINGS_STATS.path):
+def merge_with_stats(df_numeric, stats_csv_path=ProcessedCSV.LISTINGS_STATS.path, with_ids=False):
     """
     Łączy wyczyszczone dane numeryczne ze statystykami rezerwacji.
 
@@ -127,6 +127,7 @@ def merge_with_stats(df_numeric, stats_csv_path=ProcessedCSV.LISTINGS_STATS.path
     )
 
     # 5. Usunięcie nadmiarowego klucza 'listing_id' po połączeniu
-    df_final = df_final.drop(columns=['listing_id', 'id', 'host_id'])
+    if not with_ids:
+        df_final = df_final.drop(columns=['listing_id', 'id', 'host_id'])
 
     return df_final

@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from pathlib import Path
 import torch
 import numpy as np
+import joblib
 
 from models.binary import BinaryClassifier
 from models.naive import NaiveZeroClassifier
@@ -66,6 +67,10 @@ SAVED_MODELS_DIR = ROOT / "saved_models"
 SCALER_PATH = SAVED_MODELS_DIR / "scaler.joblib"
 _device = torch.device("cpu")
 
+# Scaler (saved during training with joblib.dump)
+SCALER_PATH = SAVED_MODELS_DIR / "scaler.joblib"
+_scaler = None
+
 
 def _load_binary_model(path: Path):
     # Load state dict first to infer input dimension
@@ -120,6 +125,17 @@ try:
 except Exception:
     _naive_model = None
 
+try:
+    if SCALER_PATH.exists():
+        print(f"Loading scaler from: {SCALER_PATH}")
+        _scaler = joblib.load(SCALER_PATH)
+        print("Scaler loaded")
+    else:
+        print(f"No scaler found at: {SCALER_PATH}")
+except Exception as e:
+    print("Failed loading scaler:", repr(e))
+    _scaler = None
+
 
 def _prepare_features(data: dict, expected_dim: int):
     """Return a numpy array shaped (1, D) for model input.
@@ -134,7 +150,7 @@ def _prepare_features(data: dict, expected_dim: int):
         # Build vector from REQUIRED_FIELDS order (skip id and host_id)
         vec = []
         for f in REQUIRED_FIELDS:
-            if f in ('id', 'host_id'):
+            if f in ('id', 'host_id', 'listing_id'):
                 continue
             if f in data:
                 vec.append(data[f])
@@ -142,6 +158,13 @@ def _prepare_features(data: dict, expected_dim: int):
 
     if feats.ndim == 1:
         feats = feats.reshape(1, -1)
+
+    # Apply scaler if available (scaler expects shape (n_samples, n_features))
+    if _scaler is not None:
+        try:
+            feats = _scaler.transform(feats)
+        except Exception as e:
+            raise ValueError(f"Scaler transform failed: {e}")
 
     if feats.shape[1] != expected_dim:
         raise ValueError(f"Input features length {feats.shape[1]} does not match model expected {expected_dim}")
@@ -234,5 +257,4 @@ def predict():
 
 
 if __name__ == "__main__":
-    # Use 0.0.0.0 so Docker can expose it
     app.run(host="0.0.0.0", port=5000)
