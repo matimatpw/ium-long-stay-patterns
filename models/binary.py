@@ -8,7 +8,6 @@ class BinaryClassifier(nn.Module):
         """
         super(BinaryClassifier, self).__init__()
 
-        # Definiujemy całą architekturę jako jeden blok
         self.network = nn.Sequential(
             nn.Linear(input_dim, 64),
             nn.ReLU(),

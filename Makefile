@@ -5,6 +5,7 @@
 PROJECT_NAME = ium-long-stay-patterns
 PYTHON_VERSION = 3.13
 PYTHON_INTERPRETER = python
+IMAGE_NAME = $(PROJECT_NAME)-predictor
 
 #################################################################################
 # COMMANDS                                                                      #
@@ -73,6 +74,12 @@ data: requirements
 .PHONY: listing_stats
 listing_stats: data
 	poetry run $(PYTHON_INTERPRETER) -m ium_long_stay_patterns.dataset --listing-stats
+
+
+.PHONY: run
+run:
+	docker build -f prediction_service/Dockerfile -t $(IMAGE_NAME):latest .
+	docker run --rm -p 5000:5000 --name $(IMAGE_NAME) $(IMAGE_NAME):latest
 
 
 #################################################################################
