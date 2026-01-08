@@ -3,6 +3,7 @@ from pathlib import Path
 import torch
 import numpy as np
 import joblib
+import pandas as pd
 
 from models.binary import BinaryClassifier
 from models.naive import NaiveZeroClassifier
@@ -167,6 +168,16 @@ def _prepare_features(data: dict, expected_dim: int):
     # Apply scaler if available (scaler expects shape (n_samples, n_features))
     if _scaler is not None:
         try:
+            # If scaler was fitted with feature names, provide a DataFrame
+            # so sklearn won't warn about missing feature names when
+            # transforming a numpy array.
+            if hasattr(_scaler, "feature_names_in_"):
+                if isinstance(feats, np.ndarray):
+                    if feats.ndim == 1:
+                        feats = feats.reshape(1, -1)
+                    if feats.shape[1] == len(_scaler.feature_names_in_):
+                        feats = pd.DataFrame(feats, columns=_scaler.feature_names_in_)
+
             feats = _scaler.transform(feats)
         except Exception as e:
             raise ValueError(f"Scaler transform failed: {e}")
@@ -245,7 +256,13 @@ def predict_binary():
 
     preds = (probs > 0.5).astype(int).tolist()  # sigmoid at the end so threshold at 0.5
 
-    result = {
+    result = {#todo sukcesja modeli
+        # todo strojenie hiperparametrow
+        # porownanie modeli jest
+        # roznice modeli - opisac
+        # set seed
+        # odniesienie sie do kryteriow suckesu w.z. z czym 
+        # test AB
         "model": "binary_classifier",
         "prediction": preds,
         "probability": probs.tolist()

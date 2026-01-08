@@ -126,7 +126,6 @@ def merge_with_stats(df_numeric, stats_csv_path=ProcessedCSV.LISTINGS_STATS.path
         how='inner'
     )
 
-    # 5. Usunięcie nadmiarowego klucza 'listing_id' po połączeniu
     if not with_ids:
         df_final = df_final.drop(columns=['listing_id', 'id', 'host_id'])
 
