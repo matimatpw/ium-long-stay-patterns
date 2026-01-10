@@ -1,5 +1,6 @@
 """Helpers for creating PyTorch DataLoaders from tensors."""
 
+from pandas import DataFrame
 from typing import Tuple
 from torch.utils.data import DataLoader, TensorDataset
 import torch
@@ -36,7 +37,7 @@ def create_loaders(
     return train_loader, val_loader, test_loader
 
 
-def prepare_and_create_loaders(X, y, batch_size=32):
+def prepare_and_create_loaders(X, y, batch_size=32,save_test_data=True, test_data_path='X_test_raw.csv'):
     X_temp, X_test_raw, y_temp, y_test_raw = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
     )
@@ -44,6 +45,14 @@ def prepare_and_create_loaders(X, y, batch_size=32):
     X_train_raw, X_val_raw, y_train_raw, y_val_raw = train_test_split(
         X_temp, y_temp, test_size=0.2, random_state=42, stratify=y_temp
     )
+
+    # Save X_test_raw to file
+    if save_test_data:
+        if isinstance(X_test_raw, DataFrame):
+            X_test_raw.to_csv(test_data_path, index=False)
+        else:
+            DataFrame(X_test_raw).to_csv(test_data_path, index=False)
+        print(f"Saved X_test_raw to {test_data_path}")
 
     scaler = StandardScaler()
     X_train_np = scaler.fit_transform(X_train_raw)
