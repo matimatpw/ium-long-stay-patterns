@@ -255,14 +255,7 @@ def predict_binary():
 
     preds = (probs > 0.5).astype(int).tolist()  # sigmoid at the end so threshold at 0.5
 
-    result = {#todo sukcesja modeli
-        # todo strojenie hiperparametrow
-        # porownanie modeli jest
-        # roznice modeli - opisac
-        # set seed
-        # odniesienie sie do kryteriow suckesu w.z. z czym
-        # test AB
-        # "model": "binary_classifier",
+    result = {
         "prediction": preds,
         "probability": probs.tolist()
     }

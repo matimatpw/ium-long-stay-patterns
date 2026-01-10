@@ -1,0 +1,2 @@
+conversion_rate_diff,conversion_rate_lift,success_rate_diff,z_score,p_value,statistically_significant,chi2_statistic,chi2_p_value
+0.25210084033613445,0,0.0,6.624198896530943,3.491362754459715e-11,True,41.33248237634556,1.2841712815030293e-10

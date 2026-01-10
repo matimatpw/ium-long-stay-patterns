@@ -8,7 +8,7 @@ from ..config import set_seed
 
 class Trainer:
     def __init__(self, model, criterion, optimizer, epochs=100, device=None, seed: int = None):
-        # Optionally seed RNGs for reproducible training runs
+
         if seed is not None:
             set_seed(seed)
 

@@ -4,16 +4,21 @@
 
 
 # TODO
+1. wyciagnac napisane podsumowania do final_report.md z
+    classification_numeric_data.ipynb
+    analyze_logs.md
+2. Strojenie hiperparametrow
+3. Sukcesja modeli(?)
 
-<!-- 1. listing_statistics -->
-2. amenities standaryzowac
-<!-- 3. polaczyc w 1 data set interesujace kolumny -->
-4. host_response_time (zestandaryzowac jakos jesli sie da chyba tak)
 
-5. feature importance (cechy z listings) zrobic
 
-6. zrobic duzy dataset OHE do modelu xgboost/BinaryClassifier i wytrenowac (punkt 2 i 4)
-7. microservice: base - naive / big_model - xgboost/BinaryClassifier
+
+<!-- # porownanie modeli  -->
+<!-- # roznice modeli - opisac -->
+<!-- # set seed -->
+<!-- # odniesienie sie do kryteriow suckesu w.z. z czym -->
+<!-- # test AB -->
+
 
 
 

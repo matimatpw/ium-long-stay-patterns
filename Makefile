@@ -88,6 +88,9 @@ dev:
 ab:
 	poetry run python prediction_service/ab_test.py --seed 42
 
+analyze:
+	poetry run python prediction_service/analyze_logs.py
+
 #################################################################################
 # Self Documenting Commands                                                     #
 #################################################################################
