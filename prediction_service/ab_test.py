@@ -14,11 +14,12 @@ import argparse
 from datetime import datetime
 from pathlib import Path
 import requests
+import pandas as pd
 
 from ium_long_stay_patterns.config import set_seed
 
 ROOT = Path(__file__).resolve().parent
-DATA_PATH = ROOT / "test_data" / "test_ab_data.json"
+DATA_PATH = ROOT / "test_data" / "test_ab_data.csv"
 LOG_PATH = ROOT / "logs.txt"
 
 URL_BASE = "http://localhost:5000/predict"
@@ -27,6 +28,10 @@ ENDPOINTS = {
     "binary": "/binary",
 }
 
+def load_data_csv(path: Path):
+    df = pd.read_csv(path)
+    # Convert DataFrame to list of dictionaries
+    return df.to_dict(orient='records')
 
 def load_data(path: Path):
     with path.open("r", encoding="utf-8") as f:
@@ -47,7 +52,7 @@ def main():
     if args.seed is not None:
         set_seed(args.seed)
 
-    data = load_data(DATA_PATH)
+    data = load_data_csv(DATA_PATH)
 
     counts = {"naive": 0, "binary": 0, "all": 0}
 
