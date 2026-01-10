@@ -77,17 +77,20 @@ listing_stats: data
 
 
 ## service
-.PHONY: run dev ab
+.PHONY: run
 run:
 	docker build -f prediction_service/Dockerfile -t $(IMAGE_NAME):latest .
 	docker run --rm -p 5000:5000 --name $(IMAGE_NAME) $(IMAGE_NAME):latest
 
+.PHONY: dev
 dev:
 	poetry run python prediction_service/app.py
 
+.PHONY: ab
 ab:
 	poetry run python prediction_service/ab_test.py --seed 42
 
+.PHONY: analyze
 analyze:
 	poetry run python prediction_service/analyze_logs.py
 

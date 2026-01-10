@@ -20,7 +20,7 @@ from ium_long_stay_patterns.config import set_seed
 
 ROOT = Path(__file__).resolve().parent
 DATA_PATH = ROOT / "test_data" / "test_ab_data.csv"
-LOG_PATH = ROOT / "logs.txt"
+LOG_PATH = ROOT / "logs" / "logs_ab.txt"
 
 URL_BASE = "http://localhost:5000/predict"
 ENDPOINTS = {
