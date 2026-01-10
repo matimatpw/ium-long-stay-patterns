@@ -6,6 +6,30 @@
 
 A short description of the project.
 
+
+# Setup
+
+## Necessary
+1. python 3.13
+2. poetry
+3. make
+
+## Environment activation
+    eval $(poetry env activate)
+
+## Install dependencies
+    make requirements
+
+## start prediction service
+*dockerized:*
+
+    make run
+*local:*
+
+    make dev
+
+*other commands are self-documented in **Makefile***
+
 ## Project Organization
 
 ```
@@ -26,7 +50,7 @@ A short description of the project.
 │                         the creator's initials, and a short `-` delimited description, e.g.
 │                         `1.0-jqp-initial-data-exploration`.
 │
-├── pyproject.toml     <- Project configuration file with package metadata for 
+├── pyproject.toml     <- Project configuration file with package metadata for
 │                         ium_long_stay_patterns and configuration for tools like black
 │
 ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
@@ -49,9 +73,9 @@ A short description of the project.
     │
     ├── features.py             <- Code to create features for modeling
     │
-    ├── modeling                
-    │   ├── __init__.py 
-    │   ├── predict.py          <- Code to run model inference with trained models          
+    ├── modeling
+    │   ├── __init__.py
+    │   ├── predict.py          <- Code to run model inference with trained models
     │   └── train.py            <- Code to train models
     │
     └── plots.py                <- Code to create visualizations
