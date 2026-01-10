@@ -4,9 +4,14 @@ from loguru import logger
 from tqdm import tqdm
 from sklearn.metrics import roc_auc_score, f1_score, precision_score, recall_score
 import numpy as np
+from ..config import set_seed
 
 class Trainer:
-    def __init__(self, model, criterion, optimizer, epochs=100, device=None):
+    def __init__(self, model, criterion, optimizer, epochs=100, device=None, seed: int = None):
+        # Optionally seed RNGs for reproducible training runs
+        if seed is not None:
+            set_seed(seed)
+
         self.device = device if device else torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = model.to(self.device)
         self.criterion = criterion

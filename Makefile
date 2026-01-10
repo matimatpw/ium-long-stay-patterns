@@ -16,7 +16,7 @@ IMAGE_NAME = $(PROJECT_NAME)-predictor
 .PHONY: requirements
 requirements:
 	poetry install
-	
+
 
 
 
@@ -77,11 +77,16 @@ listing_stats: data
 
 
 ## service
-.PHONY: run
+.PHONY: run dev ab
 run:
 	docker build -f prediction_service/Dockerfile -t $(IMAGE_NAME):latest .
 	docker run --rm -p 5000:5000 --name $(IMAGE_NAME) $(IMAGE_NAME):latest
 
+dev:
+	poetry run python prediction_service/app.py
+
+ab:
+	poetry run python prediction_service/ab_test.py --seed 42
 
 #################################################################################
 # Self Documenting Commands                                                     #

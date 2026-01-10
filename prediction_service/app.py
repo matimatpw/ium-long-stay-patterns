@@ -123,7 +123,7 @@ except Exception as e:
     _binary_model = None
 
 try:
-    path = SAVED_MODELS_DIR / "naive_classifier_model.pth" 
+    path = SAVED_MODELS_DIR / "naive_classifier_model.pth"
     print(f"Loading naive model from: {path} (exists={path.exists()})")
     _naive_model = _load_naive_model(path)
     print("Naive model loaded")
@@ -223,7 +223,6 @@ def predict_base():
         probs = _naive_model(x).cpu().numpy().ravel().tolist()
 
     result = {
-        "model": "naive_zero_classifier",
         "prediction": [int(p > 0.5) for p in probs],
         "probability": probs
     }
@@ -261,9 +260,9 @@ def predict_binary():
         # porownanie modeli jest
         # roznice modeli - opisac
         # set seed
-        # odniesienie sie do kryteriow suckesu w.z. z czym 
+        # odniesienie sie do kryteriow suckesu w.z. z czym
         # test AB
-        "model": "binary_classifier",
+        # "model": "binary_classifier",
         "prediction": preds,
         "probability": probs.tolist()
     }

@@ -51,3 +51,38 @@ try:
     logger.add(lambda msg: tqdm.write(msg, end=""), colorize=True)
 except ModuleNotFoundError:
     pass
+
+
+def set_seed(seed: int, deterministic: bool = True) -> None:
+    """Set global seeds for Python, NumPy and PyTorch.
+
+    This ensures reproducibility across the project where deterministic
+    behavior is desired. If PyTorch is not available, NumPy and Python
+    random will still be seeded.
+
+    Args:
+        seed: integer seed
+        deterministic: if True, set cuDNN to deterministic mode (may reduce perf)
+    """
+    import os
+    import random as _random
+    import numpy as _np
+
+    try:
+        import torch as _torch
+    except Exception:
+        _torch = None
+
+    _random.seed(seed)
+    _np.random.seed(seed)
+    os.environ["PYTHONHASHSEED"] = str(seed)
+
+    if _torch is not None:
+        _torch.manual_seed(seed)
+        if _torch.cuda.is_available():
+            _torch.cuda.manual_seed_all(seed)
+        if deterministic:
+            _torch.backends.cudnn.deterministic = True
+            _torch.backends.cudnn.benchmark = False
+
+    logger.info(f"Global seed set to {seed} (deterministic={deterministic})")
