@@ -55,7 +55,7 @@ except ModuleNotFoundError:
     pass
 
 
-def set_seed(seed: int, deterministic: bool = True) -> None:
+def set_seed(seed: int, deterministic: bool = True, verbose=False) -> None:
     """Set global seeds for Python, NumPy and PyTorch.
 
     This ensures reproducibility across the project where deterministic
@@ -87,5 +87,5 @@ def set_seed(seed: int, deterministic: bool = True) -> None:
         if deterministic:
             _torch.backends.cudnn.deterministic = True
             _torch.backends.cudnn.benchmark = False
-
-    logger.info(f"Global seed set to {seed} (deterministic={deterministic})")
+    if verbose:
+        logger.info(f"Global seed set to {seed} (deterministic={deterministic})")

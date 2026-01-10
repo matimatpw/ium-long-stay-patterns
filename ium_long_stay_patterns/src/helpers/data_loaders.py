@@ -43,14 +43,14 @@ def create_loaders(
 
 
 def prepare_and_create_loaders(
-    X, y, batch_size=32, save_test_data=True, test_data_path="X_test_raw.csv"
+    X, y, batch_size=32, random_state=42, save_test_data=True, test_data_path="X_test_raw.csv", verbose=True
 ):
     X_temp, X_test_raw, y_temp, y_test_raw = train_test_split(
-        X, y, test_size=0.2, random_state=42, stratify=y
+        X, y, test_size=0.2, random_state=random_state, stratify=y
     )
 
     X_train_raw, X_val_raw, y_train_raw, y_val_raw = train_test_split(
-        X_temp, y_temp, test_size=0.2, random_state=42, stratify=y_temp
+        X_temp, y_temp, test_size=0.2, random_state=random_state, stratify=y_temp
     )
 
     # Save X_test_raw to file
@@ -77,11 +77,11 @@ def prepare_and_create_loaders(
     train_loader, val_loader, test_loader = create_loaders(
         X_train, y_train, X_val, y_val, X_test, y_test, batch_size=batch_size
     )
-
-    print(f"Train set size: {X_train.shape[0]} ({y_train.sum().item()} positive)")
-    print(f"Validation set size: {X_val.shape[0]} ({y_val.sum().item()} positive)")
-    print(f"Test set size: {X_test.shape[0]}")
-    print(f"Features: {X_train.shape[1]}")
-    print(f"Total positive samples in train set: {y_train.sum().item()}")
+    if verbose:
+        print(f"Train set size: {X_train.shape[0]} ({y_train.sum().item()} positive)")
+        print(f"Validation set size: {X_val.shape[0]} ({y_val.sum().item()} positive)")
+        print(f"Test set size: {X_test.shape[0]}")
+        print(f"Features: {X_train.shape[1]}")
+        print(f"Total positive samples in train set: {y_train.sum().item()}")
 
     return train_loader, val_loader, test_loader, scaler
