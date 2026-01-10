@@ -1,5 +1,5 @@
-from pathlib import Path
 from enum import Enum
+from pathlib import Path
 
 from dotenv import load_dotenv
 from loguru import logger
@@ -17,6 +17,7 @@ INTERIM_DATA_DIR = DATA_DIR / "interim"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 EXTERNAL_DATA_DIR = DATA_DIR / "external"
 
+
 class ProcessedCSV(Enum):
     """Paths to processed CSV files inside `data/processed`."""
 
@@ -33,6 +34,7 @@ class ProcessedCSV(Enum):
 
     def __str__(self) -> str:  # pragma: no cover - trivial
         return str(self.path)
+
 
 MODELS_DIR = PROJ_ROOT / "models"
 SAVED_MODELS_DIR = PROJ_ROOT / "saved_models"
@@ -66,6 +68,7 @@ def set_seed(seed: int, deterministic: bool = True) -> None:
     """
     import os
     import random as _random
+
     import numpy as _np
 
     try:

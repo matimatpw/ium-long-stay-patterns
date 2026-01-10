@@ -1,22 +1,27 @@
 import numpy as np
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
     accuracy_score,
+    average_precision_score,
+    classification_report,
+    confusion_matrix,
+    f1_score,
     precision_score,
     recall_score,
-    f1_score,
-    confusion_matrix,
-    classification_report,
-    average_precision_score,
+)
+from sklearn.model_selection import train_test_split
+
+from ium_long_stay_patterns.src.helper_methods import (
+    prepare_booking_data,
+    prepare_listing_data,
 )
 
-from ium_long_stay_patterns.src.helper_methods import (prepare_booking_data, prepare_listing_data)
 
 def naive_predict_all_zero(n_samples):
     """
     Return an array of zeros of length n_samples (predict 'not long stay' for all).
     """
     return np.zeros(n_samples, dtype=int)
+
 
 def evaluate_naive_on_bookings(
     sessions_csv="data/raw/sessions.csv",
@@ -82,8 +87,12 @@ def evaluate_naive_on_bookings(
     if verbose:
         print("Naive baseline: always predict is_long_stay = 0")
         print(f"Test size: {len(y_test)}")
-        print("Class counts (test): not_long_stay=0 ->", results["class_balance_test"]["n_not_long_stay"],
-              ", long_stay=1 ->", results["class_balance_test"]["n_long_stay"])
+        print(
+            "Class counts (test): not_long_stay=0 ->",
+            results["class_balance_test"]["n_not_long_stay"],
+            ", long_stay=1 ->",
+            results["class_balance_test"]["n_long_stay"],
+        )
         print(f"Accuracy: {acc:.4f}")
         print(f"Average precision (AP): {ap:.4f}")
         print("Confusion matrix (rows=true, cols=pred) with labels [0,1]:")
@@ -92,6 +101,7 @@ def evaluate_naive_on_bookings(
         print(classification_report(y_test, y_pred, zero_division=0))
 
     return results
+
 
 def evaluate_naive_on_listings(
     listings_csv="data/raw/listings.csv",
@@ -126,8 +136,12 @@ def evaluate_naive_on_listings(
     if verbose:
         print("Naive baseline on listings: always predict is_long_stay = 0")
         print(f"Test size: {len(y_test)}")
-        print("Class counts (test): not_long_stay=0 ->", int((y_test == 0).sum()),
-              ", long_stay=1 ->", int((y_test == 1).sum()))
+        print(
+            "Class counts (test): not_long_stay=0 ->",
+            int((y_test == 0).sum()),
+            ", long_stay=1 ->",
+            int((y_test == 1).sum()),
+        )
         print(f"Accuracy: {acc:.4f}")
         print(f"Average precision (AP): {ap:.4f}")
         print("Confusion matrix (rows=true, cols=pred) with labels [0,1]:")

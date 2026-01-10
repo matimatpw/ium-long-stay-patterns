@@ -1,5 +1,6 @@
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
+
 
 def prepare_booking_data(sessions_csv="data/raw/sessions.csv"):
     """
@@ -17,7 +18,10 @@ def prepare_booking_data(sessions_csv="data/raw/sessions.csv"):
 
     return bookings
 
-def prepare_listing_data(listings_csv="data/raw/listings.csv", sessions_csv="data/raw/sessions.csv"):
+
+def prepare_listing_data(
+    listings_csv="data/raw/listings.csv", sessions_csv="data/raw/sessions.csv"
+):
     """
     Return a DataFrame aggregated per listing with a binary 'is_long_stay' label.
     Label options can be changed — here we label a listing as long-stay if its
@@ -25,21 +29,27 @@ def prepare_listing_data(listings_csv="data/raw/listings.csv", sessions_csv="dat
     """
     listings = pd.read_csv(listings_csv)
     bookings = prepare_booking_data(sessions_csv)
-    agg = bookings.groupby("listing_id").agg(
-        total_bookings=("booking_id", "count"),
-        min_stay=("length_of_stay", "min"),
-        max_stay=("length_of_stay", "max"),
-        avg_stay=("length_of_stay", "mean"),
-        stays_gte_7=("length_of_stay", lambda x: (x >= 7).sum())
-    ).reset_index()
+    agg = (
+        bookings.groupby("listing_id")
+        .agg(
+            total_bookings=("booking_id", "count"),
+            min_stay=("length_of_stay", "min"),
+            max_stay=("length_of_stay", "max"),
+            avg_stay=("length_of_stay", "mean"),
+            stays_gte_7=("length_of_stay", lambda x: (x >= 7).sum()),
+        )
+        .reset_index()
+    )
     data = listings.merge(agg, left_on="id", right_on="listing_id", how="left")
     # Fill NaNs for listings with no bookings (optional)
-    data[["total_bookings", "min_stay", "max_stay", "avg_stay", "stays_gte_7"]] = \
-        data[["total_bookings", "min_stay", "max_stay", "avg_stay", "stays_gte_7"]].fillna(0)
+    data[["total_bookings", "min_stay", "max_stay", "avg_stay", "stays_gte_7"]] = data[
+        ["total_bookings", "min_stay", "max_stay", "avg_stay", "stays_gte_7"]
+    ].fillna(0)
     # Define target: listing is long-stay if average stay >= 7
     data["is_long_stay"] = (data["avg_stay"] >= 7).astype(int)
     # print(data.head())
     return data
+
 
 def plot_long_stay_distribution(df, kind="booking", save_path=None, ax=None):
     """
@@ -70,8 +80,14 @@ def plot_long_stay_distribution(df, kind="booking", save_path=None, ax=None):
     total = counts.sum()
     for bar, value in zip(bars, counts.values):
         pct = (value / total * 100) if total > 0 else 0
-        ax.text(bar.get_x() + bar.get_width() / 2, value + total * 0.01, f"{value}\n{pct:.1f}%",
-                ha="center", va="bottom", fontsize=9)
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            value + total * 0.01,
+            f"{value}\n{pct:.1f}%",
+            ha="center",
+            va="bottom",
+            fontsize=9,
+        )
 
     if save_path:
         fig.tight_layout()

@@ -8,14 +8,13 @@ This file provides:
 
 from __future__ import annotations
 
-from ium_long_stay_patterns.config import ProcessedCSV
-
 import logging
 from typing import Optional
 
 import numpy as np
 import pandas as pd
 
+from ium_long_stay_patterns.config import ProcessedCSV
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +74,7 @@ def aggregate_listing_stats(
         "max_stay": 0,
         "avg_stay": 0.0,
         "long_stay": 0,
-        "short_stay": 0
+        "short_stay": 0,
     }
     listing_stats = listing_stats.fillna(fill_values)
 
@@ -86,7 +85,15 @@ def aggregate_listing_stats(
 
     # Reorder columns
     listing_stats = listing_stats[
-        ["listing_id", "total_bookings", "min_stay", "max_stay", "avg_stay", "long_stay", "short_stay"]
+        [
+            "listing_id",
+            "total_bookings",
+            "min_stay",
+            "max_stay",
+            "avg_stay",
+            "long_stay",
+            "short_stay",
+        ]
     ]
 
     return listing_stats
@@ -100,7 +107,9 @@ def save_listing_stats(
 ) -> pd.DataFrame:
     """Compute (if needed) and save listing statistics to CSV."""
     if listing_stats is None:
-        listing_stats = aggregate_listing_stats(sessions_csv=sessions_csv, listings_csv=listings_csv)
+        listing_stats = aggregate_listing_stats(
+            sessions_csv=sessions_csv, listings_csv=listings_csv
+        )
 
     listing_stats.to_csv(output_csv, index=False)
     logger.info("Saved listing stats to %s", output_csv)

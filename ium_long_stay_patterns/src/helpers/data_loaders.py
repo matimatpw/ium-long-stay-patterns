@@ -1,16 +1,21 @@
 """Helpers for creating PyTorch DataLoaders from tensors."""
 
-from pandas import DataFrame
 from typing import Tuple
-from torch.utils.data import DataLoader, TensorDataset
-import torch
+
+from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+import torch
+from torch.utils.data import DataLoader, TensorDataset
+
 
 def create_loaders(
-    X_train, y_train,
-    X_val, y_val,
-    X_test, y_test,
+    X_train,
+    y_train,
+    X_val,
+    y_val,
+    X_test,
+    y_test,
     batch_size: int = 32,
     shuffle_train: bool = True,
 ) -> Tuple[DataLoader, DataLoader, DataLoader]:
@@ -37,7 +42,9 @@ def create_loaders(
     return train_loader, val_loader, test_loader
 
 
-def prepare_and_create_loaders(X, y, batch_size=32,save_test_data=True, test_data_path='X_test_raw.csv'):
+def prepare_and_create_loaders(
+    X, y, batch_size=32, save_test_data=True, test_data_path="X_test_raw.csv"
+):
     X_temp, X_test_raw, y_temp, y_test_raw = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
     )

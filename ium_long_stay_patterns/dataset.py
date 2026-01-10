@@ -4,12 +4,13 @@ from loguru import logger
 from tqdm import tqdm
 import typer
 
-from ium_long_stay_patterns.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
-from ium_long_stay_patterns.src.helpers.create_listing_stats_dataset import save_listing_stats
-
-from ium_long_stay_patterns.config import ProcessedCSV
+from ium_long_stay_patterns.config import PROCESSED_DATA_DIR, RAW_DATA_DIR, ProcessedCSV
+from ium_long_stay_patterns.src.helpers.create_listing_stats_dataset import (
+    save_listing_stats,
+)
 
 app = typer.Typer()
+
 
 def create_listing_stats_dataset(
     sessions_csv: str = ProcessedCSV.SESSIONS.path,

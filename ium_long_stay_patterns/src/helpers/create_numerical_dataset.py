@@ -1,19 +1,39 @@
-import pandas as pd
-import numpy as np
 import ast
+
+import numpy as np
+import pandas as pd
+
 from ium_long_stay_patterns.config import ProcessedCSV
 
-
 DEFAULT_NUMERICAL_COLUMNS = [
-    'id', 'host_id', 'host_response_rate', 'host_acceptance_rate', 'host_is_superhost',
-    'host_listings_count', 'host_total_listings_count', 'host_verifications',
-    'latitude', 'longitude', 'accommodates', 'bathrooms', 'bedrooms', 'beds', 'price',
-    'number_of_reviews',
-    'instant_bookable', 'calculated_host_listings_count',
-    'reviews_per_month'
+    "id",
+    "host_id",
+    "host_response_rate",
+    "host_acceptance_rate",
+    "host_is_superhost",
+    "host_listings_count",
+    "host_total_listings_count",
+    "host_verifications",
+    "latitude",
+    "longitude",
+    "accommodates",
+    "bathrooms",
+    "bedrooms",
+    "beds",
+    "price",
+    "number_of_reviews",
+    "instant_bookable",
+    "calculated_host_listings_count",
+    "reviews_per_month",
 ]
 
-def create_numerical_dataset(listings_csv, columns=DEFAULT_NUMERICAL_COLUMNS, dropna_columns_that_are_all_nan=True, strategy=False):
+
+def create_numerical_dataset(
+    listings_csv,
+    columns=DEFAULT_NUMERICAL_COLUMNS,
+    dropna_columns_that_are_all_nan=True,
+    strategy=False,
+):
     """
     Read listings CSV and return a DataFrame containing only numeric columns.
 
@@ -37,41 +57,48 @@ def create_numerical_dataset(listings_csv, columns=DEFAULT_NUMERICAL_COLUMNS, dr
         df = df[existing_cols].copy()
 
     # 1. Convert Price: remove '$' and ',' then convert to float
-    if 'price' in df.columns:
-        df['price'] = df['price'].replace(r'[\$,]', '', regex=True).astype(float)
+    if "price" in df.columns:
+        df["price"] = df["price"].replace(r"[\$,]", "", regex=True).astype(float)
 
     # 2. Convert Boolean flags ('t'/'f') to integers (1/0)
-    bool_cols = ['host_is_superhost', 'instant_bookable', 'host_has_profile_pic',
-                 'host_identity_verified', 'has_availability']
+    bool_cols = [
+        "host_is_superhost",
+        "instant_bookable",
+        "host_has_profile_pic",
+        "host_identity_verified",
+        "has_availability",
+    ]
     for col in bool_cols:
         if col in df.columns:
-            df[col] = df[col].map({'t': 1, 'f': 0}).fillna(0).astype(int)
+            df[col] = df[col].map({"t": 1, "f": 0}).fillna(0).astype(int)
 
     # 3. Convert Rates: "86%" -> 0.86
-    rate_cols = ['host_response_rate', 'host_acceptance_rate']
+    rate_cols = ["host_response_rate", "host_acceptance_rate"]
     for col in rate_cols:
         if col in df.columns:
-            df[col] = df[col].str.replace('%', '', regex=False).astype(float) / 100.0
+            df[col] = df[col].str.replace("%", "", regex=False).astype(float) / 100.0
 
     # 4. Convert host_verifications: count items in the string list "['email', 'phone']"
-    if 'host_verifications' in df.columns:
+    if "host_verifications" in df.columns:
+
         def count_verifications(x):
             try:
                 # ast.literal_eval safely evaluates a string into a Python list
                 return len(ast.literal_eval(x))
             except (ValueError, SyntaxError):
                 return 0
-        df['host_verifications'] = df['host_verifications'].apply(count_verifications)
+
+        df["host_verifications"] = df["host_verifications"].apply(count_verifications)
 
     # 5. Coerce all columns to numeric, setting unparseable values to NaN
-    df = df.apply(pd.to_numeric, errors='coerce')
+    df = df.apply(pd.to_numeric, errors="coerce")
 
     # 6. Filter to keep only numeric dtypes (float64 and int64)
     df = df.select_dtypes(include=[np.number])
 
     # 7. Drop columns that are completely empty after cleaning
     if dropna_columns_that_are_all_nan:
-        df = df.dropna(axis=1, how='all')
+        df = df.dropna(axis=1, how="all")
 
     if strategy:
         return strategy_for_nans(df.copy())
@@ -79,23 +106,21 @@ def create_numerical_dataset(listings_csv, columns=DEFAULT_NUMERICAL_COLUMNS, dr
     return df
 
 
-
 def strategy_for_nans(df):
     df_numeric = df.copy()
-    df_numeric = df_numeric.dropna(subset=['price'])
+    df_numeric = df_numeric.dropna(subset=["price"])
 
-    df_numeric['reviews_per_month'] = df_numeric['reviews_per_month'].fillna(0)
+    df_numeric["reviews_per_month"] = df_numeric["reviews_per_month"].fillna(0)
 
-    for col in ['beds', 'bedrooms', 'bathrooms']:
+    for col in ["beds", "bedrooms", "bathrooms"]:
         if col in df_numeric.columns:
             df_numeric[col] = df_numeric[col].fillna(df_numeric[col].median())
 
-    for col in ['host_response_rate', 'host_acceptance_rate']:
+    for col in ["host_response_rate", "host_acceptance_rate"]:
         if col in df_numeric.columns:
             df_numeric[col] = df_numeric[col].fillna(df_numeric[col].median())
 
     return df_numeric
-
 
 
 def merge_with_stats(df_numeric, stats_csv_path=ProcessedCSV.LISTINGS_STATS.path, with_ids=False):
@@ -111,22 +136,18 @@ def merge_with_stats(df_numeric, stats_csv_path=ProcessedCSV.LISTINGS_STATS.path
 
     # 2. Obliczenie targetu (long_stay > short_stay)
     # Zwraca True/False, co .astype(int) zamienia na 1/0
-    df_stats['target'] = (df_stats['long_stay'] > df_stats['short_stay']).astype(int)
+    df_stats["target"] = (df_stats["long_stay"] > df_stats["short_stay"]).astype(int)
 
     # 3. Wybranie tylko potrzebnych kolumn do merga
     # Potrzebujemy listing_id (klucz), total_bookings (cecha) oraz target (etykieta)
-    df_stats_subset = df_stats[['listing_id', 'total_bookings', 'target']]
+    df_stats_subset = df_stats[["listing_id", "total_bookings", "target"]]
 
     # 4. Merge danych (Inner join, aby mieć tylko listingi z kompletnymi statystykami)
     df_final = pd.merge(
-        df_numeric,
-        df_stats_subset,
-        left_on='id',
-        right_on='listing_id',
-        how='inner'
+        df_numeric, df_stats_subset, left_on="id", right_on="listing_id", how="inner"
     )
 
     if not with_ids:
-        df_final = df_final.drop(columns=['listing_id', 'id', 'host_id'])
+        df_final = df_final.drop(columns=["listing_id", "id", "host_id"])
 
     return df_final
