@@ -1,3 +1,3 @@
 model,total_requests,successful_requests,failed_requests,success_rate,failure_rate,positive_predictions,negative_predictions,positive_rate,conversion_rate,mean_prediction,std_prediction,median_prediction
-naive,155,155,0,1.0,0.0,0,155,0.0,0.0,0.0,0.0,0.0
-binary,119,119,0,1.0,0.0,30,89,0.25210084033613445,0.25210084033613445,0.25210084033613445,0.4342188464794559,0.0
+naive,666,666,0,1.0,0.0,0,666,0.0,0.0,0.0,0.0,0.0
+binary,702,702,0,1.0,0.0,202,500,0.28774928774928776,0.28774928774928776,0.28774928774928776,0.4527136348168292,0.0

@@ -1,0 +1,84 @@
+poetry run python prediction_service/analyze_logs.py
+Loading logs from /home/matimat/IUM/ium-long-stay-patterns/prediction_service/logs/logs_ab.txt...
+Loaded 1368 log entries
+
+================================================================================
+A/B TEST METRICS REPORT
+================================================================================
+
+================================================================================
+MODEL: NAIVE
+================================================================================
+
+VOLUME METRICS:
+  Total Requests:      666
+  Successful:          666
+  Failed:              0
+
+RELIABILITY METRICS:
+  Success Rate:        100.00%
+  Failure Rate:        0.00%
+
+PREDICTION METRICS:
+  Longstay Predictions: 0
+  Shortstay Predictions: 666
+  Longstay Rate:        0.00%
+
+BUSINESS METRICS:
+  Conversion Rate:     0.00%
+
+STATISTICAL METRICS:
+  Mean Prediction:     0.0000
+  Std Prediction:      0.0000
+  Median Prediction:   0.0000
+
+================================================================================
+MODEL: BINARY
+================================================================================
+
+VOLUME METRICS:
+  Total Requests:      702
+  Successful:          702
+  Failed:              0
+
+RELIABILITY METRICS:
+  Success Rate:        100.00%
+  Failure Rate:        0.00%
+
+PREDICTION METRICS:
+  Longstay Predictions: 202
+  Shortstay Predictions: 500
+  Longstay Rate:        28.77%
+
+BUSINESS METRICS:
+  Conversion Rate:     28.77%
+
+STATISTICAL METRICS:
+  Mean Prediction:     0.2877
+  Std Prediction:      0.4527
+  Median Prediction:   0.0000
+
+================================================================================
+MODEL COMPARISON (Binary vs Naive)
+================================================================================
+
+CONVERSION RATE:
+  Difference:          +28.77%
+  Lift:                +0.00%
+
+SUCCESS RATE:
+  Difference:          +0.00%
+
+STATISTICAL SIGNIFICANCE:
+  Z-Score:             14.9947
+  P-Value:             0.0000
+  Significant (α=0.05): True
+
+CHI-SQUARE TEST:
+  Chi² Statistic:      222.5608
+  P-Value:             0.0000
+
+================================================================================
+
+Metrics saved to metrics_summary.csv
+Comparison metrics saved to metrics_summary_comparison.csv
