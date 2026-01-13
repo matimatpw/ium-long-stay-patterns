@@ -19,6 +19,29 @@ INTERIM_DATA_DIR = DATA_DIR / "interim"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 EXTERNAL_DATA_DIR = DATA_DIR / "external"
 
+REQUIRED_FIELDS = [
+    'id',
+    'host_id',
+    'host_response_rate',
+    'host_acceptance_rate',
+    'host_is_superhost',
+    'host_listings_count',
+    'host_total_listings_count',
+    'host_verifications',
+    'latitude',
+    'longitude',
+    'accommodates',
+    'bathrooms',
+    'bedrooms',
+    'beds',
+    'price',
+    'number_of_reviews',
+    'instant_bookable',
+    'calculated_host_listings_count',
+    'reviews_per_month',
+    'total_bookings'
+]
+
 
 class ProcessedCSV(Enum):
     """Paths to processed CSV files inside `data/processed`."""
@@ -59,13 +82,12 @@ except ModuleNotFoundError:
 
 @dataclass
 class ModelParams:
-    n_layers: int = 3
-    layers: list[int] = field(default_factory=lambda: [16, 80, 128])
-    dropout_rate: float = 0.30000000000000004
-    learning_rate: float = 0.007446685760734886
+    n_layers: int = 2
+    layers: list[int] = field(default_factory=lambda: [16, 112])
+    dropout_rate: float = 0.0
+    learning_rate: float = 0.005315184658015584
     batch_size: int = 32
-    weight_decay: float = 0.0005810024533824051
-
+    weight_decay: float = 3.694197024296665e-05
 
 
 def set_seed(seed: int, deterministic: bool = True, verbose=False) -> None:

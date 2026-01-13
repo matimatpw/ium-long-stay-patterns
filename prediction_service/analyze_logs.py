@@ -15,7 +15,7 @@ from scipy import stats
 import numpy as np
 
 ROOT = Path(__file__).resolve().parent
-LOG_PATH = ROOT / "logs_ab.txt"
+LOG_PATH = ROOT / "logs" / "logs_ab.txt"
 
 
 def load_logs(path: Path):

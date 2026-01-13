@@ -7,10 +7,8 @@ import pandas as pd
 
 from models.binary import BinaryClassifier
 from models.naive import NaiveZeroClassifier
-from ium_long_stay_patterns.config import SAVED_MODELS_DIR, ModelParams
+from ium_long_stay_patterns.config import SAVED_MODELS_DIR, ModelParams, REQUIRED_FIELDS
 from loguru import logger
-
-
 import joblib
 
 app = Flask(__name__)
@@ -23,28 +21,7 @@ app = Flask(__name__)
 
 # Expected raw fields (may be used to build a feature vector). Note: training
 # drops `id` and `host_id`
-REQUIRED_FIELDS = [
-    'id',
-    'host_id',
-    'host_response_rate',
-    'host_acceptance_rate',
-    'host_is_superhost',
-    'host_listings_count',
-    'host_total_listings_count',
-    'host_verifications',
-    'latitude',
-    'longitude',
-    'accommodates',
-    'bathrooms',
-    'bedrooms',
-    'beds',
-    'price',
-    'number_of_reviews',
-    'instant_bookable',
-    'calculated_host_listings_count',
-    'reviews_per_month',
-    'total_bookings'
-]
+
 
 # ----- Model loading -----
 # ROOT = Path(__file__).resolve().parents[1]

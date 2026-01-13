@@ -21,6 +21,12 @@ COPY README.md /app/
 
 COPY models /app/models
 
+COPY ium_long_stay_patterns/__init__.py ./ium_long_stay_patterns/
+COPY ium_long_stay_patterns/config.py ./ium_long_stay_patterns/
+
+
+
+
 # COPY saved_models /app/saved_models
 
 COPY saved_models /saved_models
