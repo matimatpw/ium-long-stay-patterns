@@ -3,6 +3,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from loguru import logger
+from dataclasses import dataclass, field
+
 
 # Load environment variables from .env file if it exists
 load_dotenv()
@@ -53,6 +55,17 @@ try:
     logger.add(lambda msg: tqdm.write(msg, end=""), colorize=True)
 except ModuleNotFoundError:
     pass
+
+
+@dataclass
+class ModelParams:
+    n_layers: int = 3
+    layers: list[int] = field(default_factory=lambda: [16, 80, 128])
+    dropout_rate: float = 0.30000000000000004
+    learning_rate: float = 0.007446685760734886
+    batch_size: int = 32
+    weight_decay: float = 0.0005810024533824051
+
 
 
 def set_seed(seed: int, deterministic: bool = True, verbose=False) -> None:
