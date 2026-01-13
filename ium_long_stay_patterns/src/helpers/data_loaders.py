@@ -43,7 +43,7 @@ def create_loaders(
 
 
 def prepare_and_create_loaders(
-    X, y, batch_size=32, random_state=42, save_test_data=True, test_data_path="X_test_raw.csv", verbose=True
+    X, y, batch_size=32, random_state=42, save_test_data=False, test_data_path="X_test_raw.csv", verbose=True
 ):
     X_temp, X_test_raw, y_temp, y_test_raw = train_test_split(
         X, y, test_size=0.2, random_state=random_state, stratify=y
