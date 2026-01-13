@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 
 class BinaryClassifier(nn.Module):
@@ -8,8 +7,8 @@ class BinaryClassifier(nn.Module):
 
         Args:
             input_dim: Number of input features
-            hidden_layers: List of hidden layer sizes (e.g., [64, 32])
-            dropout_rate: Dropout probability (0.0 means no dropout)
+            hidden_layers: List of hidden layer sizes
+            dropout_rate: Dropout probability
         """
         super(BinaryClassifier, self).__init__()
 

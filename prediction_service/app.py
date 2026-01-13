@@ -7,10 +7,19 @@ import pandas as pd
 
 from models.binary import BinaryClassifier
 from models.naive import NaiveZeroClassifier
+from ium_long_stay_patterns.config import SAVED_MODELS_DIR, ModelParams
+from loguru import logger
+
 
 import joblib
 
 app = Flask(__name__)
+
+# logging.basicConfig(
+#     level=logging.INFO
+# )
+
+# logger = getLogger(__name__)
 
 # Expected raw fields (may be used to build a feature vector). Note: training
 # drops `id` and `host_id`
@@ -37,40 +46,14 @@ REQUIRED_FIELDS = [
     'total_bookings'
 ]
 
-# feats_ex =  {
-# "id": 30419466,
-# "features": [
-# 0.86, // host_response_rate
-# 1.0, // host_acceptance_rate
-# 1, // host_is_superhost
-# 20, // host_listings_count
-# 24, // host_total_listings_count
-# 2, // host_verifications
-# 37.97251, // latitude
-# 23.72772, // longitude
-# 10, // accommodates
-# 3.0, // bathrooms
-# 4.0, // bedrooms
-# 7.0, // beds
-# 432.0, // price
-# 181, // number_of_reviews
-# 1, // instant_bookable
-# 12, // calculated_host_listings_count
-# 2.51, // reviews_per_month
-# 5 // total_bookings
-# ]
-# }
-
-
 # ----- Model loading -----
-ROOT = Path(__file__).resolve().parents[1]
-SAVED_MODELS_DIR = ROOT / "saved_models"
-SCALER_PATH = SAVED_MODELS_DIR / "scaler.joblib"
-_device = torch.device("cpu")
-
-# Scaler (saved during training with joblib.dump)
-SCALER_PATH = SAVED_MODELS_DIR / "scaler.joblib"
+# ROOT = Path(__file__).resolve().parents[1]
+# SAVED_MODELS_DIR = ROOT / "saved_models"
+SCALER_PATH = SAVED_MODELS_DIR / "binary_scaler.joblib"
+_device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 _scaler = None
+params = ModelParams()
+
 
 
 def _load_binary_model(path: Path):
@@ -87,7 +70,7 @@ def _load_binary_model(path: Path):
     if input_dim is None:
         raise RuntimeError("Could not infer input dimension from saved binary model")
 
-    model = BinaryClassifier(input_dim, hidden_layers=[32, 16])
+    model = BinaryClassifier(input_dim, hidden_layers=params.layers, dropout_rate=params.dropout_rate)
     model.load_state_dict(state)
     model.to(_device)
     model.eval()
@@ -100,8 +83,7 @@ def _load_naive_model(path: Path):
         state = torch.load(path, map_location=_device)
         model.load_state_dict(state)
     except Exception:
-        print("EXCEPTION")
-        # naive model may have empty state dict; ignore
+        logger.info("Naive model may have empty state dict; ignoring load error")
         pass
     model.to(_device)
     model.eval()
@@ -115,31 +97,32 @@ _naive_model = None
 
 try:
     path = SAVED_MODELS_DIR / "binary_classifier_model.pth"
-    print(f"Loading binary model from: {path} (exists={path.exists()})")
+    logger.info(f"Loading binary model from: {path} (exists={path.exists()})")
     _binary_model, _binary_input_dim = _load_binary_model(path)
-    print("Binary model loaded, input_dim=", _binary_input_dim)
+    logger.info(f"Binary model loaded, input_dim= {_binary_input_dim}")
+    print(_binary_model)
 except Exception as e:
-    print("Failed loading binary model:", repr(e))
+    logger.error("Failed loading binary model:", repr(e))
     _binary_model = None
 
 try:
     path = SAVED_MODELS_DIR / "naive_classifier_model.pth"
-    print(f"Loading naive model from: {path} (exists={path.exists()})")
+    logger.info(f"Loading naive model from: {path} (exists={path.exists()})")
     _naive_model = _load_naive_model(path)
-    print("Naive model loaded")
+    logger.info("Naive model loaded")
 
 except Exception:
     _naive_model = None
 
 try:
     if SCALER_PATH.exists():
-        print(f"Loading scaler from: {SCALER_PATH}")
+        logger.info(f"Loading scaler from: {SCALER_PATH}")
         _scaler = joblib.load(SCALER_PATH)
-        print("Scaler loaded")
+        logger.info("Scaler loaded")
     else:
-        print(f"No scaler found at: {SCALER_PATH}")
+        logger.info(f"No scaler found at: {SCALER_PATH}")
 except Exception as e:
-    print("Failed loading scaler:", repr(e))
+    logger.error(f"Failed loading scaler: {repr(e)}")
     _scaler = None
 
 
