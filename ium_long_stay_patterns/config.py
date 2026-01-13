@@ -82,12 +82,12 @@ except ModuleNotFoundError:
 
 @dataclass
 class ModelParams:
-    n_layers: int = 2
-    layers: list[int] = field(default_factory=lambda: [16, 112])
-    dropout_rate: float = 0.0
-    learning_rate: float = 0.005315184658015584
-    batch_size: int = 32
-    weight_decay: float = 3.694197024296665e-05
+    n_layers: int = 3
+    layers: list[int] = field(default_factory=lambda: [80, 128, 64])
+    dropout_rate: float = 0.3
+    learning_rate: float = 0.008375350811026756
+    batch_size: int = 64
+    weight_decay: float = 0.0007186556345221058
 
 
 def set_seed(seed: int, deterministic: bool = True, verbose=False) -> None:
