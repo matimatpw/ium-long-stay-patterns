@@ -1,11 +1,11 @@
 """Simple A/B tester for naive (baseline) and binary model endpoints.
 
-For each record in `test_data/test_ab_data.json` the script randomly
+For each record in `test_data/test_ab_data.csv` the script randomly
 chooses one of the two endpoints (/predict/base or /predict/binary), sends
-POST, and appends a JSON line to `logs.txt` with timestamp, chosen model,
+POST, and appends a JSON line to `logs_ab.txt` with timestamp, chosen model,
 record id (if present), response status and prediction (or error).
 
-Usage: python prediction_service/ab_test.py
+Usage: poetry run python prediction_service/ab_test.py
 """
 
 import json
@@ -30,7 +30,6 @@ ENDPOINTS = {
 
 def load_data_csv(path: Path):
     df = pd.read_csv(path)
-    # Convert DataFrame to list of dictionaries
     return df.to_dict(orient='records')
 
 def load_data(path: Path):
@@ -39,14 +38,13 @@ def load_data(path: Path):
 
 
 def log_entry(entry: dict):
-    # append JSON lines for easy post-processing
     with LOG_PATH.open("a", encoding="utf-8") as f:
         f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
 
 def main():
     parser = argparse.ArgumentParser(description="A/B test runner")
-    parser.add_argument("--seed", type=int, default=None, help="Optional global seed for reproducibility")
+    parser.add_argument("--seed", type=int, default=None, help="Global seed for reproducibility")
     args = parser.parse_args()
 
     if args.seed is not None:
@@ -57,7 +55,6 @@ def main():
     counts = {"naive": 0, "binary": 0, "all": 0}
 
     for rec in data:
-        # choose model randomly per request
         chosen = random.choice(list(ENDPOINTS.keys()))
         counts[chosen] += 1
         counts["all"] += 1

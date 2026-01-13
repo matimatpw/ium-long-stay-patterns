@@ -87,7 +87,7 @@ def _load_binary_model(path: Path):
     if input_dim is None:
         raise RuntimeError("Could not infer input dimension from saved binary model")
 
-    model = BinaryClassifier(input_dim)
+    model = BinaryClassifier(input_dim, hidden_layers=[32, 16])
     model.load_state_dict(state)
     model.to(_device)
     model.eval()

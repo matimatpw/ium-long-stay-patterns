@@ -1,9 +1,9 @@
 """Calculate business and analytical metrics from A/B test logs.
 
-Reads logs.txt (JSON lines format) and computes various metrics for comparing
+Reads logs_ab.txt (JSON lines format) and computes various metrics for comparing
 the naive and binary models.
 
-Usage: python prediction_service/calculate_metrics.py
+Usage: poetry run python prediction_service/calculate_metrics.py
 """
 
 import json
@@ -15,7 +15,7 @@ from scipy import stats
 import numpy as np
 
 ROOT = Path(__file__).resolve().parent
-LOG_PATH = ROOT / "logs.txt"
+LOG_PATH = ROOT / "logs_ab.txt"
 
 
 def load_logs(path: Path):
