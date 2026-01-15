@@ -42,10 +42,10 @@ format:
 
 
 
-## Run tests
+## Run tests (simple rest api requests using data from .json files)
 .PHONY: test
 test:
-	python -m pytest tests
+	poetry run python prediction_service/test.py
 
 
 ## Set up Python interpreter environment
@@ -93,6 +93,8 @@ ab:
 .PHONY: analyze
 analyze:
 	poetry run python prediction_service/analyze_logs.py
+
+
 
 #################################################################################
 # Self Documenting Commands                                                     #
